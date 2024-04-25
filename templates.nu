@@ -4,6 +4,7 @@ def completions [] {$env.template_list | get name}
 export def --env mktemp [new: path, template: string@completions] {
  if $template in ($env.template_list | get name) {
   cp -r ($env.template_list | where name == $template | get path) $new
+  rm -r ($new | path join ".git")
  } else {
   "template not listed"
  }
