@@ -1,8 +1,21 @@
-def generate_git_code [dir: path] {
+export def generate_git_code [dir: path] {
  let git_string = (git fetch; git status)
- if (git_string | str contains "untracked files") {
-  $'(ansi yellow)(g)'
- } else if (git_string | str contains "text") {
-  $'(ansi red)(g)'
+ let init = $'(ansi green)('g')'
+ mut staged = ""
+ mut commit = ""
+ mut track = ""
+ mut pull = ""
+ if ($git_string | str contains "To be committed") {
+  $commit = $'(ansi orange)('c')'
+ } 
+ if ($git_string | str contains "Untracked files") {
+  $track = $'(ansi yellow)('u')'
+ } 
+ if ($git_string | str contains "text") {
+  $pull = $'(ansi red)('p')'
  }
+ if ($git_string | str contains "not staged") {
+  $staged = $'(ansi yellow)('n')'
+ }
+ [$init, $staged, $commit, $track, $pull] | str join
 }
